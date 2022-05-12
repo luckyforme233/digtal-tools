@@ -16,24 +16,23 @@ var one_key = &cobra.Command{
 	Short: "一键部署",
 	Long:  `一键部署`,
 	Run: func(cmd *cobra.Command, args []string) {
-		//droplet, _, err := digtal.CreateDroplet()
-		//if err != nil {
-		//	log.Println("创建vps 失败: ", err)
-		//	return
-		//}
-		//var ip string
-		//
-		//for {
-		//	info, _, _ := digtal.GetDropLetInfo(droplet.ID)
-		//	if len(info.Networks.V4) > 0 {
-		//		ip = info.Networks.V4[0].IPAddress
-		//		break
-		//	} else {
-		//		time.Sleep(time.Second * 3)
-		//	}
-		//}
-		var ip = "137.184.121.219"
-		var err error
+		droplet, _, err := digtal.CreateDroplet()
+		if err != nil {
+			log.Println("创建vps 失败: ", err)
+			return
+		}
+		var ip string
+
+		for {
+			info, _, _ := digtal.GetDropLetInfo(droplet.ID)
+			if len(info.Networks.V4) > 0 {
+				ip = info.Networks.V4[0].IPAddress
+				break
+			} else {
+				time.Sleep(time.Second * 3)
+			}
+		}
+
 		fmt.Println("ip:", ip)
 
 		var client *ssh2.SshClient
@@ -56,15 +55,6 @@ var one_key = &cobra.Command{
 		}
 		log.Println("安装结果：", output)
 
-		// detect
-		testV2ray, err := client.RunCommand("/usr/local/bin/v2ray -test -config /usr/local/etc/v2ray/config.json")
-		if err != nil {
-			log.Println("检测失败：", err)
-			return
-		}
-
-		log.Println("检测结果", testV2ray)
-
 		jsonPlainText, err := ioutil.ReadFile("tt.json")
 		if err != nil {
 			log.Fatalf("unable to read private key: %v", err)
@@ -77,6 +67,13 @@ var one_key = &cobra.Command{
 			log.Println("检测失败：", err)
 			return
 		}
+		// detect
+		testV2ray, err := client.RunCommand("/usr/local/bin/v2ray -test -config /usr/local/etc/v2ray/config.json")
+		if err != nil {
+			log.Println("检测失败：", err)
+			return
+		}
+		log.Println("检测结果", testV2ray)
 
 		add2, err := client.RunCommand("cat /usr/local/etc/v2ray/config.json")
 		if err != nil {
