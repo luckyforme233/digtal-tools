@@ -35,6 +35,7 @@ var one_key = &cobra.Command{
 		fmt.Println("ip:", ip)
 
 		var client *ssh2.SshClient
+		time.Sleep(time.Minute * 3)
 
 		for {
 			client, err = ssh2.NewSshClient("root", ip, 22, config.C.PrvKeyPath, "")
@@ -45,7 +46,6 @@ var one_key = &cobra.Command{
 				break
 			}
 		}
-		time.Sleep(time.Minute * 3)
 
 		output, err := client.RunCommand("bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)")
 		if err != nil {
