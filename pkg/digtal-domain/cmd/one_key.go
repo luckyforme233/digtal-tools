@@ -35,6 +35,7 @@ var one_key = &cobra.Command{
 		fmt.Println("ip:", ip)
 
 		var client *ssh2.SshClient
+		fmt.Println("等待服务器准备完成，进行链接。。。。。。")
 		time.Sleep(time.Minute * 3)
 
 		for {
