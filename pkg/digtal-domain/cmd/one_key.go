@@ -16,9 +16,9 @@ var one_key = &cobra.Command{
 	Short: "一键部署",
 	Long:  `一键部署`,
 	Run: func(cmd *cobra.Command, args []string) {
-		droplet, response, err := digtal.CreateDroplet()
+		droplet, _, err := digtal.CreateDroplet()
 		if err != nil {
-			log.Println("创建vps 失败: ", response.String(), err)
+			log.Println("创建vps 失败: ", err)
 			return
 		}
 		var ip string
@@ -44,7 +44,13 @@ var one_key = &cobra.Command{
 			} else {
 				break
 			}
+
+			fmt.Println(client)
+			fmt.Println(err)
 		}
+
+		fmt.Println("服务器已创建，等待服务器链接...")
+		time.Sleep(time.Minute * 3)
 
 		output, err := client.RunCommand("bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)")
 		if err != nil {
