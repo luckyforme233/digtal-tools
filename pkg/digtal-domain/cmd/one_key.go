@@ -44,12 +44,7 @@ var one_key = &cobra.Command{
 			} else {
 				break
 			}
-
-			fmt.Println(client)
-			fmt.Println(err)
 		}
-
-		fmt.Println("服务器已创建，等待服务器链接...")
 		time.Sleep(time.Minute * 3)
 
 		output, err := client.RunCommand("bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)")
@@ -83,7 +78,7 @@ var one_key = &cobra.Command{
 
 		add2, err := client.RunCommand("cat /usr/local/etc/v2ray/config.json")
 		if err != nil {
-			log.Println("检测失败：", err)
+			log.Println("查看配置失败：", err)
 			return
 		}
 
