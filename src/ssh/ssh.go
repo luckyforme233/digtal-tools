@@ -9,8 +9,7 @@ import (
 )
 
 type SshClient struct {
-	session *ssh.Session
-	client  *ssh.Client
+	client *ssh.Client
 }
 
 func NewSshClient(user string, host string, port int, privateKeyPath string, privateKeyPassword string) (*SshClient, error) {
@@ -45,21 +44,15 @@ func NewSshClient(user string, host string, port int, privateKeyPath string, pri
 	}
 
 	// open session
-	session, err := conn.NewSession()
-	if err != nil {
-		return nil, fmt.Errorf("Create session for %v failed %v", server, err)
-	}
 
 	client := &SshClient{
-		session: session,
-		client:  conn,
+		client: conn,
 	}
 
 	return client, nil
 }
 
 func (s SshClient) Close() {
-	s.session.Close()
 	s.client.Close()
 }
 
@@ -68,7 +61,10 @@ func (s SshClient) Close() {
 func (s *SshClient) RunCommand(cmd string) (string, error) {
 	// open connection
 	// run command and capture stdout/stderr
-	output, err := s.session.Output(cmd)
-	fmt.Println("runCommand : ", string(output), err)
-	return fmt.Sprintf("%s", output), err
+	session, err := s.client.NewSession()
+	if err != nil {
+		return "", fmt.Errorf("Create session for failed %v", err)
+	}
+	output, err := session.CombinedOutput(cmd)
+	return string(output), err
 }

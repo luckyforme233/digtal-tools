@@ -16,27 +16,28 @@ var one_key = &cobra.Command{
 	Short: "一键部署",
 	Long:  `一键部署`,
 	Run: func(cmd *cobra.Command, args []string) {
-		droplet, _, err := digtal.CreateDroplet()
-		if err != nil {
-			log.Println("创建vps 失败: ", err)
-			return
-		}
-		var ip string
-
-		for {
-			info, _, _ := digtal.GetDropLetInfo(droplet.ID)
-			if len(info.Networks.V4) > 0 {
-				ip = info.Networks.V4[0].IPAddress
-				break
-			} else {
-				time.Sleep(time.Second * 3)
-			}
-		}
+		//droplet, _, err := digtal.CreateDroplet()
+		//if err != nil {
+		//	log.Println("创建vps 失败: ", err)
+		//	return
+		//}
+		//var ip string
+		//
+		//for {
+		//	info, _, _ := digtal.GetDropLetInfo(droplet.ID)
+		//	if len(info.Networks.V4) > 0 {
+		//		ip = info.Networks.V4[0].IPAddress
+		//		break
+		//	} else {
+		//		time.Sleep(time.Second * 3)
+		//	}
+		//}
+		var ip = "137.184.121.219"
+		var err error
 		fmt.Println("ip:", ip)
 
 		var client *ssh2.SshClient
 		fmt.Println("等待服务器准备完成，进行链接。。。。。。")
-		time.Sleep(time.Minute * 3)
 
 		for {
 			client, err = ssh2.NewSshClient("root", ip, 22, config.C.PrvKeyPath, "")
