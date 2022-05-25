@@ -1,4 +1,8 @@
-token="digtal 的token"
+token="digtal token"
 
-prvKeyPath="私钥路径"
-pubKeyPath="公钥路径"
+prvKeyPath="id_rsa"
+pubKeyPath="id_rsa.pub"
+
+CLEmail="Cloud flare 邮箱"
+CLApiKey="密钥"
+CLDomain="域名"

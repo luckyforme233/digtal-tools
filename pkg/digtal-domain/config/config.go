@@ -10,6 +10,9 @@ type conf struct {
 	Token      string `toml:"token"`
 	PrvKeyPath string `toml:"prvKeyPath"`
 	PubKeyPath string `toml:"pubKeyPath"`
+	CLEmail    string `toml:"CLEmail"`
+	CLApiKey   string `toml:"CLApiKey"`
+	CLDomain   string `toml:"CLDomain"`
 }
 
 var C conf

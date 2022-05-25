@@ -22,6 +22,7 @@ func Execute() {
 	rootCmd.AddCommand(create)
 	rootCmd.AddCommand(delete)
 	rootCmd.AddCommand(one_key)
+	rootCmd.AddCommand(cc)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

@@ -2,10 +2,12 @@ package ssh
 
 import (
 	"fmt"
+	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"log"
 	"net"
+	"path"
 )
 
 type SshClient struct {
@@ -67,4 +69,31 @@ func (s *SshClient) RunCommand(cmd string) (string, error) {
 	}
 	output, err := session.CombinedOutput(cmd)
 	return string(output), err
+}
+
+func (s *SshClient) ScpCopy(localFilePath, remoteDir string) error {
+
+	sftpClient, err := sftp.NewClient(s.client)
+	if err != nil { //创建客户端
+		fmt.Println("创建客户端失败", err)
+		return err
+	}
+	defer sftpClient.Close()
+
+	shellContent, err := ioutil.ReadFile(localFilePath)
+	if err != nil {
+		log.Fatalf("unable to read private key: %v", err)
+		return err
+	}
+
+	var remoteFileName = path.Base(localFilePath)
+
+	dstFile, err := sftpClient.Create(path.Join(remoteDir, remoteFileName))
+	if err != nil {
+		log.Println("scpCopy:", err, "remote path:", path.Join(remoteDir, remoteFileName))
+		return err
+	}
+	defer dstFile.Close()
+	dstFile.Write(shellContent)
+	return nil
 }
